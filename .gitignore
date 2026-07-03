@@ -1,0 +1,6 @@
+clients.csv
+reply.txt
+__pycache__/
+*.pyc
+.env
+main_v0_*_backup.py
