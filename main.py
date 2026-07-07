@@ -194,13 +194,92 @@ Status: {row["Status"]}
 
     if not found:
         print("No matching client found.")
+def update_client_status():
+    file_name = "clients.csv"
+
+    if not os.path.exists(file_name):
+        print("No clients saved yet.")
+        return
+
+    search_term = input("Enter client name or phone to update: ").lower().strip()
+    clients = []
+    found = False
+
+    with open(file_name, "r", encoding="utf-8") as file:
+        reader = csv.DictReader(file)
+
+        for row in reader:
+            clients.append(row)
+
+    for index, row in enumerate(clients, start=1):
+        client_name = row["Client Name"].lower()
+        phone = row["Phone"].lower()
+
+        if search_term in client_name or search_term in phone:
+            found = True
+
+            print(f"""
+Client found:
+Name: {row["Client Name"]}
+Phone: {row["Phone"]}
+Current Status: {row["Status"]}
+""")
+
+            print("Choose new status:")
+            print("1 - Waiting for details")
+            print("2 - Price requested")
+            print("3 - Appointment requested")
+            print("4 - Follow-up needed")
+            print("5 - Closed")
+
+            status_choice = input("Enter number: ")
+
+            status_options = {
+                "1": "Waiting for details",
+                "2": "Price requested",
+                "3": "Appointment requested",
+                "4": "Follow-up needed",
+                "5": "Closed"
+            }
+
+            new_status = status_options.get(status_choice)
+
+            if new_status:
+                row["Status"] = new_status
+                print("Status updated successfully.")
+            else:
+                print("Invalid status choice.")
+
+    if not found:
+        print("No matching client found.")
+        return
+
+    with open(file_name, "w", newline="", encoding="utf-8") as file:
+        fieldnames = [
+            "Date",
+            "Client Name",
+            "Phone",
+            "Country",
+            "Dress Type",
+            "Wedding Date",
+            "Language",
+            "Inquiry Type",
+            "Status",
+            "Reply"
+        ]
+
+        writer = csv.DictWriter(file, fieldnames=fieldnames)
+        writer.writeheader()
+        writer.writerows(clients)
 
 while True:
     print("\nWelcome to ALAADUBA Bridal Assistant")
     print("1 - Create new inquiry")
     print("2 - View saved clients")
     print("3 - Search client")
-    print("4 - Exit")
+    print("4 - Update client status")
+    print("5 - Exit")
+
 
     choice = input("Choose an option: ")
 
@@ -214,8 +293,13 @@ while True:
         search_client()
 
     elif choice == "4":
-        print("Goodbye.")
-        break
+     update_client_status()
+
+    elif choice == "5":
+     print("Goodbye.")
+     break
 
     else:
-        print("Invalid choice. Please choose 1, 2, 3, or 4.")
+     print("Invalid choice. Please choose 1, 2, 3, 4, or 5.")
+
+
