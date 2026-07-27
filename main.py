@@ -271,35 +271,110 @@ Current Status: {row["Status"]}
         writer = csv.DictWriter(file, fieldnames=fieldnames)
         writer.writeheader()
         writer.writerows(clients)
+def add_client_note():
+    file_name = "clients.csv"
+
+    if not os.path.exists(file_name):
+        print("No clients saved yet.")
+        return
+
+    search_term = input("Enter client name or phone to add note: ").lower().strip()
+
+    clients = []
+    found = False
+
+    with open(file_name, "r", encoding="utf-8") as file:
+        reader = csv.DictReader(file)
+
+        for row in reader:
+            clients.append(row)
+
+    for row in clients:
+        client_name = row.get("Client Name", "").lower()
+        phone = row.get("Phone", "").lower()
+
+        if search_term in client_name or search_term in phone:
+            found = True
+
+            print(f"""
+Client found:
+Name: {row.get("Client Name", "")}
+Phone: {row.get("Phone", "")}
+Current Status: {row.get("Status", "")}
+Current Notes: {row.get("Notes", "No notes yet")}
+""")
+
+            new_note = input("Enter new note: ").strip()
+
+            if new_note:
+                current_notes = row.get("Notes", "").strip()
+                note_time = datetime.now().strftime("%Y-%m-%d %H:%M")
+                full_note = note_time + " - " + new_note
+
+                if current_notes:
+                    row["Notes"] = current_notes + " | " + full_note
+                else:
+                    row["Notes"] = full_note
+
+                print("Note added successfully.")
+            else:
+                print("No note entered.")
+
+    if not found:
+        print("No matching client found.")
+        return
+
+    with open(file_name, "w", newline="", encoding="utf-8") as file:
+        fieldnames = [
+            "Date",
+            "Client Name",
+            "Phone",
+            "Country",
+            "Dress Type",
+            "Wedding Date",
+            "Language",
+            "Inquiry Type",
+            "Status",
+            "Reply",
+            "Notes"
+        ]
+
+        writer = csv.DictWriter(file, fieldnames=fieldnames)
+        writer.writeheader()
+        writer.writerows(clients)
 
 while True:
-    print("\nWelcome to ALAADUBA Bridal Assistant")
-    print("1 - Create new inquiry")
-    print("2 - View saved clients")
-    print("3 - Search client")
-    print("4 - Update client status")
-    print("5 - Exit")
+ print("\nWelcome to ALAADUBA Bridal Assistant")
+ print("1 - Create new inquiry")
+ print("2 - View saved clients")
+ print("3 - Search client")
+ print("4 - Update client status")
+ print("5 - Add client note")
+ print("6 - Exit")
 
+ choice = input("Choose an option: ")
 
-    choice = input("Choose an option: ")
-
-    if choice == "1":
+ if choice == "1":
         create_new_inquiry()
 
-    elif choice == "2":
+ elif choice == "2":
         view_saved_clients()
 
-    elif choice == "3":
+ elif choice == "3":
         search_client()
 
-    elif choice == "4":
+ elif choice == "4":
      update_client_status()
 
-    elif choice == "5":
-     print("Goodbye.")
-     break
+ elif choice == "5":
+    add_client_note()
 
-    else:
-     print("Invalid choice. Please choose 1, 2, 3, 4, or 5.")
+ elif choice == "6":
+    print("Goodbye.")
+    break
+
+ else:
+    print("Invalid choice. Please choose 1, 2, 3, 4, 5, or 6.")
+
 
 
