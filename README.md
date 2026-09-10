@@ -17,9 +17,9 @@ Features
 - Create a new bridal inquiry
 - Collect client name, phone, country, dress type, wedding date, and language
 - Choose inquiry type:
-  - New bridal inquiry
-  - Price request
-  - Appointment request
+- New bridal inquiry
+- Price request
+- Appointment request
 - Generate a WhatsApp-style reply
 - Save the generated reply to a text file
 - Save client data to a CSV file
