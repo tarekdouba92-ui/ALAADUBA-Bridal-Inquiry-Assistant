@@ -3,6 +3,6 @@ reply.txt
 __pycache__/
 *.pyc
 .env
-main_v0_*_backup.py
+main_v*_backup.py
 exports/
 *_profile_*.txt
