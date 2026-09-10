@@ -385,6 +385,80 @@ Notes: {row.get("Notes", "No notes yet")}
     if not found:
         print("No matching client found.")
 
+def export_client_profile():
+    file_name = "clients.csv"
+
+    if not os.path.exists(file_name):
+        print("No clients saved yet.")
+        return
+
+    search_term = input("Enter client name or phone to export profile: ").lower().strip()
+
+    if not search_term:
+        print("Search term cannot be empty.")
+        return
+
+    found = False
+
+    with open(file_name, "r", encoding="utf-8") as file:
+        reader = csv.DictReader(file)
+
+        for index, row in enumerate(reader, start=1):
+            client_name = row.get("Client Name", "").lower()
+            phone = row.get("Phone", "").lower()
+
+            if search_term in client_name or search_term in phone:
+                found = True
+
+                display_name = row.get("Client Name", "client").strip()
+
+                if not display_name:
+                    display_name = "client"
+
+                safe_name = display_name.lower().replace(" ", "_")
+
+                for char in ['\\', '/', ':', '*', '?', '"', '<', '>', '|']:
+                    safe_name = safe_name.replace(char, "")
+
+                os.makedirs("exports", exist_ok=True)
+
+                export_time = datetime.now().strftime("%Y-%m-%d_%H-%M")
+                export_file = os.path.join("exports", f"{safe_name}_profile_{export_time}.txt")
+
+                profile_text = f"""
+================================
+ALAADUBA Client Profile #{index}
+================================
+
+Date: {row.get("Date", "")}
+Name: {row.get("Client Name", "")}
+Phone: {row.get("Phone", "")}
+Country: {row.get("Country", "")}
+Dress Type: {row.get("Dress Type", "")}
+Wedding Date: {row.get("Wedding Date", "")}
+Language: {row.get("Language", "")}
+Inquiry Type: {row.get("Inquiry Type", "")}
+Status: {row.get("Status", "")}
+
+Reply:
+{row.get("Reply", "")}
+
+Notes:
+{row.get("Notes", "No notes yet")}
+
+================================
+Exported: {datetime.now().strftime("%Y-%m-%d %H:%M")}
+================================
+"""
+
+                with open(export_file, "w", encoding="utf-8") as output_file:
+                    output_file.write(profile_text)
+
+                print(f"Client profile exported successfully: {export_file}")
+
+    if not found:
+        print("No matching client found.")
+
 while True:
  print("\nWelcome to ALAADUBA Bridal Assistant")
  print("1 - Create new inquiry")
@@ -393,8 +467,8 @@ while True:
  print("4 - Update client status")
  print("5 - Add client note")
  print("6 - View full client profile")
- print("7 - Exit")
-
+ print("7 - Export client profile")
+ print("8 - Exit")
  choice = input("Choose an option: ")
 
  if choice == "1":
@@ -416,11 +490,11 @@ while True:
     view_client_profile()
 
  elif choice == "7":
+    export_client_profile()
+
+ elif choice == "8":
     print("Goodbye.")
     break
-
- else:
-    print("Invalid choice. Please choose 1, 2, 3, 4, 5, 6, or 7.")
-
-
-
+ 
+else:
+    print("Invalid choice. Please choose 1, 2, 3, 4, 5, 6, 7, or 8.")
