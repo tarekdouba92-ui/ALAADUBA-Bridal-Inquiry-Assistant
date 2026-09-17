@@ -456,6 +456,126 @@ Exported: {datetime.now().strftime("%Y-%m-%d %H:%M")}
 
                 print(f"Client profile exported successfully: {export_file}")
 
+def edit_client_details():
+    file_name = "clients.csv"
+
+    if not os.path.exists(file_name):
+        print("No clients saved yet.")
+        return
+
+    search_term = input("Enter client name or phone to edit: ").lower().strip()
+
+    clients = []
+    found = False
+
+    with open(file_name, "r", encoding="utf-8") as file:
+        reader = csv.DictReader(file)
+
+        for row in reader:
+            clients.append(row)
+
+    for row in clients:
+        client_name = row.get("Client Name", "").lower()
+        phone = row.get("Phone", "").lower()
+
+        if search_term in client_name or search_term in phone:
+            found = True
+
+            print(f"""
+Client found:
+Name: {row.get("Client Name", "")}
+Phone: {row.get("Phone", "")}
+Country: {row.get("Country", "")}
+Dress Type: {row.get("Dress Type", "")}
+Wedding Date: {row.get("Wedding Date", "")}
+Language: {row.get("Language", "")}
+Inquiry Type: {row.get("Inquiry Type", "")}
+Status: {row.get("Status", "")}
+""")
+
+            print("What do you want to edit?")
+            print("1 - Client Name")
+            print("2 - Phone")
+            print("3 - Country")
+            print("4 - Dress Type")
+            print("5 - Wedding Date")
+            print("6 - Language")
+            print("7 - Inquiry Type")
+            print("8 - Status")
+            print("9 - Cancel")
+
+            edit_choice = input("Choose an option: ").strip()
+
+            if edit_choice == "1":
+                row["Client Name"] = input("Enter new client name: ").strip()
+            elif edit_choice == "2":
+                row["Phone"] = input("Enter new phone: ").strip()
+            elif edit_choice == "3":
+                row["Country"] = input("Enter new country: ").strip()
+            elif edit_choice == "4":
+                row["Dress Type"] = input("Enter new dress type: ").strip()
+            elif edit_choice == "5":
+                row["Wedding Date"] = input("Enter new wedding date: ").strip()
+            elif edit_choice == "6":
+                row["Language"] = input("Enter new language: ").strip()
+            elif edit_choice == "7":
+                row["Inquiry Type"] = input("Enter new inquiry type: ").strip()
+            elif edit_choice == "8":
+                print("Choose new status:")
+                print("1 - New bridal inquiry")
+                print("2 - Waiting for details")
+                print("3 - Appointment requested")
+                print("4 - Follow-up needed")
+                print("5 - Closed")
+
+                status_choice = input("Enter number: ").strip()
+
+                if status_choice == "1":
+                    row["Status"] = "New bridal inquiry"
+                elif status_choice == "2":
+                    row["Status"] = "Waiting for details"
+                elif status_choice == "3":
+                    row["Status"] = "Appointment requested"
+                elif status_choice == "4":
+                    row["Status"] = "Follow-up needed"
+                elif status_choice == "5":
+                    row["Status"] = "Closed"
+                else:
+                    print("Invalid status choice.")
+                    return
+            elif edit_choice == "9":
+                print("Edit cancelled.")
+                return
+            else:
+                print("Invalid choice.")
+                return
+
+            print("Client details updated successfully.")
+            break
+
+    if not found:
+        print("No matching client found.")
+        return
+
+    with open(file_name, "w", newline="", encoding="utf-8") as file:
+        fieldnames = [
+            "Date",
+            "Client Name",
+            "Phone",
+            "Country",
+            "Dress Type",
+            "Wedding Date",
+            "Language",
+            "Inquiry Type",
+            "Status",
+            "Reply",
+            "Notes"
+        ]
+
+        writer = csv.DictWriter(file, fieldnames=fieldnames)
+        writer.writeheader()
+        writer.writerows(clients)
+
     if not found:
         print("No matching client found.")
 
@@ -468,7 +588,8 @@ while True:
  print("5 - Add client note")
  print("6 - View full client profile")
  print("7 - Export client profile")
- print("8 - Exit")
+ print("8 - Edit client details")
+ print("9 - Exit") 
  choice = input("Choose an option: ")
 
  if choice == "1":
@@ -493,8 +614,13 @@ while True:
     export_client_profile()
 
  elif choice == "8":
+    edit_client_details()
+
+ elif choice == "9":
     print("Goodbye.")
     break
  
 else:
-    print("Invalid choice. Please choose 1, 2, 3, 4, 5, 6, 7, or 8.")
+    print("Invalid choice. Please choose 1, 2, 3, 4, 5, 6, 7, 8, or 9.")
+
+    
