@@ -2,6 +2,15 @@ import csv
 import os
 from datetime import datetime
 
+def get_required_input(prompt):
+    while True:
+        value = input(prompt).strip()
+
+        if value:
+            return value
+
+        print("This field cannot be empty. Please enter a value.")
+
 def generate_reply(client_name, country, dress_type, inquiry_type):
     if inquiry_type == "1":
         reply = f"""
@@ -96,12 +105,12 @@ def save_client(client_name, phone, country, dress_type, wedding_date, language,
         ])
 
 def create_new_inquiry():
-    client_name = input("Client name: ")
-    phone = input("Client phone: ")
-    country = input("Client country: ")
-    dress_type = input("Dress type: ")
-    wedding_date = input("Wedding date: ")
-    language = input("Language English/Arabic: ").lower().strip()
+    client_name = get_required_input("Client name: ")
+    phone = get_required_input("Client phone: ")
+    country = get_required_input("Client country: ")
+    dress_type = get_required_input("Dress type: ")
+    wedding_date = get_required_input("Wedding date: ")
+    language = get_required_input("Language English/Arabic: ").lower().strip()
 
     print("\nChoose inquiry type:")
     print("1 - New bridal inquiry")
@@ -111,9 +120,9 @@ def create_new_inquiry():
     inquiry_type = input("Enter number: ")
 
     inquiry_labels = {
-        "1": "New bridal inquiry",
-        "2": "Price request",
-        "3": "Appointment request"
+    "1": "New bridal inquiry",
+    "2": "Price request",
+    "3": "Appointment request"
     }
 
     inquiry_label = inquiry_labels.get(inquiry_type, "General inquiry")
