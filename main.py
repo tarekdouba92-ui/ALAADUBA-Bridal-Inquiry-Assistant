@@ -11,6 +11,15 @@ def get_required_input(prompt):
 
         print("This field cannot be empty. Please enter a value.")
 
+def get_menu_choice(prompt, valid_choices):
+    while True:
+        choice = input(prompt).strip()
+
+        if choice in valid_choices:
+            return choice
+
+        print(f"Invalid choice. Please choose: {', '.join(valid_choices)}")
+
 def generate_reply(client_name, country, dress_type, inquiry_type):
     if inquiry_type == "1":
         reply = f"""
@@ -117,7 +126,7 @@ def create_new_inquiry():
     print("2 - Price request")
     print("3 - Appointment request")
 
-    inquiry_type = input("Enter number: ")
+    inquiry_type = get_menu_choice("Enter number: ", ["1", "2", "3"])
 
     inquiry_labels = {
     "1": "New bridal inquiry",
