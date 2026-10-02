@@ -608,7 +608,7 @@ while True:
  print("7 - Export client profile")
  print("8 - Edit client details")
  print("9 - Exit") 
- choice = input("Choose an option: ")
+ choice = get_menu_choice("Choose an option: ", ["1", "2", "3", "4", "5", "6", "7", "8", "9"])
 
  if choice == "1":
         create_new_inquiry()
