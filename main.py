@@ -20,6 +20,22 @@ def get_menu_choice(prompt, valid_choices):
 
         print(f"Invalid choice. Please choose: {', '.join(valid_choices)}")
 
+def get_phone_input(prompt):
+    while True:
+        phone = input(prompt).strip()
+
+        cleaned_phone = phone.replace(" ", "").replace("-", "")
+
+        if cleaned_phone.startswith("+"):
+            number_part = cleaned_phone[1:]
+        else:
+            number_part = cleaned_phone
+
+        if number_part.isdigit() and 7 <= len(number_part) <= 15:
+            return phone
+
+        print("Invalid phone number. Please enter 7-15 digits. You can use +, spaces, or hyphens.")
+
 def generate_reply(client_name, country, dress_type, inquiry_type):
     if inquiry_type == "1":
         reply = f"""
@@ -115,7 +131,7 @@ def save_client(client_name, phone, country, dress_type, wedding_date, language,
 
 def create_new_inquiry():
     client_name = get_required_input("Client name: ")
-    phone = get_required_input("Client phone: ")
+    phone = get_phone_input("Client phone: ")
     country = get_required_input("Client country: ")
     dress_type = get_required_input("Dress type: ")
     wedding_date = get_required_input("Wedding date: ")
