@@ -2,6 +2,49 @@ import csv
 import os
 from datetime import datetime
 
+def get_required_input(prompt):
+    while True:
+        value = input(prompt).strip()
+
+        if value:
+            return value
+
+        print("This field cannot be empty. Please enter a value.")
+
+def get_menu_choice(prompt, valid_choices):
+    while True:
+        choice = input(prompt).strip()
+
+        if choice in valid_choices:
+            return choice
+
+        print(f"Invalid choice. Please choose: {', '.join(valid_choices)}")
+
+def get_phone_input(prompt):
+    while True:
+        phone = input(prompt).strip()
+
+        cleaned_phone = phone.replace(" ", "").replace("-", "")
+
+        if cleaned_phone.startswith("+"):
+            number_part = cleaned_phone[1:]
+        else:
+            number_part = cleaned_phone
+
+        if number_part.isdigit() and 7 <= len(number_part) <= 15:
+            return phone
+
+        print("Invalid phone number. Please enter 7-15 digits. You can use +, spaces, or hyphens.")
+
+def get_language_input(prompt):
+    while True:
+        language = input(prompt).strip().lower()
+
+        if language in ["english", "arabic"]:
+            return language
+
+        print("Invalid language. Please enter English or Arabic.")
+
 def generate_reply(client_name, country, dress_type, inquiry_type):
     if inquiry_type == "1":
         reply = f"""
@@ -96,24 +139,23 @@ def save_client(client_name, phone, country, dress_type, wedding_date, language,
         ])
 
 def create_new_inquiry():
-    client_name = input("Client name: ")
-    phone = input("Client phone: ")
-    country = input("Client country: ")
-    dress_type = input("Dress type: ")
-    wedding_date = input("Wedding date: ")
-    language = input("Language English/Arabic: ").lower().strip()
-
+    client_name = get_required_input("Client name: ")
+    phone = get_phone_input("Client phone: ")
+    country = get_required_input("Client country: ")
+    dress_type = get_required_input("Dress type: ")
+    wedding_date = get_required_input("Wedding date: ")
+    language = get_language_input("Language English/Arabic: ")
     print("\nChoose inquiry type:")
     print("1 - New bridal inquiry")
     print("2 - Price request")
     print("3 - Appointment request")
 
-    inquiry_type = input("Enter number: ")
+    inquiry_type = get_menu_choice("Enter number: ", ["1", "2", "3"])
 
     inquiry_labels = {
-        "1": "New bridal inquiry",
-        "2": "Price request",
-        "3": "Appointment request"
+    "1": "New bridal inquiry",
+    "2": "Price request",
+    "3": "Appointment request"
     }
 
     inquiry_label = inquiry_labels.get(inquiry_type, "General inquiry")
@@ -590,7 +632,7 @@ while True:
  print("7 - Export client profile")
  print("8 - Edit client details")
  print("9 - Exit") 
- choice = input("Choose an option: ")
+ choice = get_menu_choice("Choose an option: ", ["1", "2", "3", "4", "5", "6", "7", "8", "9"])
 
  if choice == "1":
         create_new_inquiry()
