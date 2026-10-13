@@ -36,6 +36,15 @@ def get_phone_input(prompt):
 
         print("Invalid phone number. Please enter 7-15 digits. You can use +, spaces, or hyphens.")
 
+def get_language_input(prompt):
+    while True:
+        language = input(prompt).strip().lower()
+
+        if language in ["english", "arabic"]:
+            return language
+
+        print("Invalid language. Please enter English or Arabic.")
+
 def generate_reply(client_name, country, dress_type, inquiry_type):
     if inquiry_type == "1":
         reply = f"""
@@ -135,8 +144,7 @@ def create_new_inquiry():
     country = get_required_input("Client country: ")
     dress_type = get_required_input("Dress type: ")
     wedding_date = get_required_input("Wedding date: ")
-    language = get_required_input("Language English/Arabic: ").lower().strip()
-
+    language = get_language_input("Language English/Arabic: ")
     print("\nChoose inquiry type:")
     print("1 - New bridal inquiry")
     print("2 - Price request")
