@@ -45,6 +45,24 @@ def get_language_input(prompt):
 
         print("Invalid language. Please enter English or Arabic.")
 
+def get_wedding_date_input(prompt):
+    while True:
+        wedding_date = input(prompt).strip()
+
+        if wedding_date.lower() in ["tbd", "unknown", "not sure"]:
+            return wedding_date
+
+        date_formats = ["%Y-%m-%d", "%d/%m/%Y", "%d.%m.%Y", "%d-%m-%Y"]
+
+        for date_format in date_formats:
+            try:
+                parsed_date = datetime.strptime(wedding_date, date_format)
+                return parsed_date.strftime("%Y-%m-%d")
+            except ValueError:
+                pass
+
+        print("Invalid date. Please use YYYY-MM-DD, DD/MM/YYYY, DD.MM.YYYY, or type TBD.")
+
 def generate_reply(client_name, country, dress_type, inquiry_type):
     if inquiry_type == "1":
         reply = f"""
@@ -143,7 +161,7 @@ def create_new_inquiry():
     phone = get_phone_input("Client phone: ")
     country = get_required_input("Client country: ")
     dress_type = get_required_input("Dress type: ")
-    wedding_date = get_required_input("Wedding date: ")
+    wedding_date = get_wedding_date_input("Wedding date: ")
     language = get_language_input("Language English/Arabic: ")
     print("\nChoose inquiry type:")
     print("1 - New bridal inquiry")
